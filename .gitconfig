@@ -2,7 +2,11 @@
 	helper = cache
 [user]
 	email = 3902009+mshogren@users.noreply.github.com
-	name = " Michael Shogren"
+	name = "mshogren"
+
+[alias]
+	dot = "!f() { git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME $@; }; f"
 
 [includeIf "gitdir:~/work/"]
 	    path = ~/work/.gitconfig
+

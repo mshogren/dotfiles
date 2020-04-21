@@ -4,6 +4,5 @@ https://www.anand-iyer.com/blog/2018/a-simpler-way-to-manage-your-dotfiles.html
 git clone --separate-git-dir=$HOME/.dotfiles https://github.com/mshogren/dotfiles.git tmpdotfiles
 rsync --recursive --verbose --exclude '.git' tmpdotfiles/ $HOME/
 rm -r tmpdotfiles
-source ~/.bashrc
-dotfiles config --local status.showUntrackedFiles no
+git dot config --local status.showUntrackedFiles no
 ```

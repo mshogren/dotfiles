@@ -1,0 +1,8 @@
+[credential]
+	helper = cache
+[user]
+	email = 3902009+mshogren@users.noreply.github.com
+	name = " Michael Shogren"
+
+[includeIf "gitdir:~/work/"]
+	    path = ~/work/.gitconfig

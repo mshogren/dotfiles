@@ -5,7 +5,7 @@
 	name = "mshogren"
 
 [alias]
-	dot = "!f() { git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME $@; }; f"
+	dot = "!f() { git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME \"$@\"; }; f"
 
 [includeIf "gitdir:~/work/"]
 	    path = ~/work/.gitconfig

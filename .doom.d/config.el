@@ -55,6 +55,48 @@
 (setq browse-url-browser-function 'browse-url-generic
       browse-url-generic-program "www-browser")
 
+(defun org-outlook-open (id)
+  "Open the Outlook item identified by ID.  ID should be an Outlook GUID."
+  (browse-url-generic (concat "outlook:" id)))
+
+(require 'org)
+
+(org-add-link-type "outlook" 'org-outlook-open)
+
+(defun update-org-agendas-and-appts ()
+  (progn
+    (org-agenda-to-appt)
+    (dolist (buffer (buffer-list))
+      (with-current-buffer buffer
+        (when (derived-mode-p 'org-agenda-mode)
+          (org-agenda-redo))))))
+
+(add-hook 'org-mode-hook 'update-org-agendas-and-appts)
+(add-hook 'org-mode-hook
+          (lambda ()
+              (add-hook 'after-save-hook 'update-org-agendas-and-appts)))
+
+(defun notify-popup (title msg)
+  "Show a popup if we're on X, or using PowerShell, or echo it otherwise;
+TITLE is the titleof the message, MSG is the context.
+Optionally, you can provide an ICON and a sound to be played"
+  (if (executable-find "notify-send")
+      (let ((default-directory temporary-file-directory))
+        (async-shell-command (concat "notify-send " " '" title "' '" msg "'")))
+    (if (executable-find "powershell.exe")
+        (let ((default-directory temporary-file-directory))
+          (async-shell-command (concat "powershell.exe -Command \"New-BurntToastNotification -Text '" title "', '" msg "'\"")))
+      (message (concat title ": " msg)))))
+
+(defun notify-appt (min-to-appt new-time msg)
+  "Show a notification based on an upcoming appointment"
+  (notify-popup msg new-time))
+
+(setq appt-display-format 'window)
+(setq appt-disp-window-function 'notify-appt)
+(appt-activate 1)
+(display-time)
+
 (setq +org-capture-notes-file "refile.org")
 (setq +org-capture-todo-file "refile.org")
 (setq org-capture-templates

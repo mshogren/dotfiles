@@ -1,0 +1,52 @@
+{
+  "name": "@nodenv/node-build",
+  "version": "4.8.2",
+  "description": "Install NodeJS versions",
+  "homepage": "https://github.com/nodenv/node-build#readme",
+  "license": "MIT",
+  "contributors": [
+    "Jason Karns <jason@karns.name> (http://jason.karns.name)",
+    "Sam Stephenson <sstephenson@gmail.com> (http://sstephenson.us)",
+    "Will McKenzie <willmckenzie@oinutter.co.uk> (http://www.oinutter.co.uk)"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nodenv/node-build.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nodenv/node-build/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "directories": {
+    "bin": "bin",
+    "test": "test"
+  },
+  "files": [
+    "bin",
+    "etc",
+    "share"
+  ],
+  "scripts": {
+    "clean": "git clean -f -- share",
+    "start": "bin/node-build",
+    "scrape-definitions": "nodenv-update-version-defs --nodejs --chakracore --graal -d share/node-build/",
+    "submit-definitions": "node_modules/@nodenv/node-build-update-defs/script/submit-definitions",
+    "test": "bats ${CI:+--tap} test",
+    "lint": "git ls-files bin script **/*.*sh | xargs shellcheck",
+    "lint:lts": "script/lint/lts",
+    "lint:checksums": "node_modules/@nodenv/node-build-update-defs/script/verify-definitions",
+    "preversion": "script/preversion",
+    "version": "script/version-sync",
+    "postversion": "git push --follow-tags",
+    "unmerged": "git for-each-ref refs/rbenv-tags --format='%(refname)' --merged"
+  },
+  "devDependencies": {
+    "@nodenv/node-build-update-defs": "^2.9.4",
+    "bats": "^1.1.0",
+    "bats-assert": "jasonkarns/bats-assert-1",
+    "bats-mock": "^1.0.1",
+    "bats-support": "jasonkarns/bats-support"
+  }
+}

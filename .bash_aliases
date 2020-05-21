@@ -39,6 +39,7 @@ get_tmux_session() {
 start_work() {
   export EDITOR=vim
   export DISPLAY=:0.0
+  export PATH="$HOME/.local/bin/:$HOME/.nodenv/bin/:$HOME/.nodenv/shims:$PATH"
   start_ssh_agent
   get_tmux_session laptop dev
 }

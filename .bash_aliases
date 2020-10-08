@@ -36,10 +36,16 @@ get_tmux_session() {
   fi
 }
 
+update_network() {
+  echo "nameserver 1.1.1.1" | sudo tee /etc/resolv.conf > /dev/null
+  ipconfig.exe /all | grep "DNS Servers" | cut -d ":" -f 2 | grep -e '^ [0-9]' | sed 's/^/nameserver/' |tr -d '\r' | sudo tee -a /etc/resolv.conf > /dev/null
+}
+
 start_work() {
   export EDITOR=vim
-  export DISPLAY=:0.0
+  export DISPLAY=$(ipconfig.exe | grep -m 1 "IPv4 Address" | sed 's/^.*: //' | tr -d '\r' | awk '{print $1":0.0"}')
   export PATH="$HOME/.local/bin/:$HOME/.nodenv/bin/:$HOME/.nodenv/shims:$PATH"
+  update_network
   start_ssh_agent
   get_tmux_session laptop dev
 }

@@ -35,6 +35,7 @@ set laststatus=2
 set noshowmode
 set number
 set signcolumn=yes
+let g:solarized_termcolors=256
 colorscheme solarized
 
 highlight clear SignColumn

@@ -2,7 +2,13 @@ bootstrap_environment() {
   sudo apt-get update && apt-get upgrade -y
 
   # this is the smallest set of things I can't live without
-  sudo apt-get install git rsync vim-nox fzf tmux openssh-client mosh curl
+  sudo apt-get install git rsync vim-nox fzf tmux openssh-client mosh curl gnupg-agent software-properties-common
+
+  # docker allows me to run a bunch of other things too
+  curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
+  sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable"
+  sudo apt-get update
+  sudo apt-get install docker-ce docker-ce-cli containerd.io nfs-common cifs-utils
 }
 
 start_ssh_agent() {
@@ -50,3 +56,34 @@ start_work() {
   get_tmux_session laptop dev
 }
 
+proxy_up() {
+  ssh -fNTD 25564 $1
+}
+
+proxy_down() {
+  ssh -TO exit $1
+}
+
+home_chrome() {
+  /mnt/c/Program\ Files\ \(x86\)/Google/Chrome/Application/chrome.exe --user-data-dir="$(wslvar USERPROFILE)\proxy-profile" --proxy-server="socks5://localhost:25564"
+}
+
+docker_run() {
+  sudo docker run --rm -it alpine ash -c "$*"
+}
+
+terraform() {
+  sudo docker run --rm -it -e TF_VAR_pm_pass=$PM_PASS -v $PWD:$PWD -w $PWD/terraform radekg/terraform-ansible:latest $*
+}
+
+ansible_toolset() {
+  sudo docker run --rm -it -v $PWD:/$PWD -w $PWD -v /var/run/docker.sock:/var/run/docker.sock quay.io/ansible/toolset:main $*
+}
+
+molecule() {
+  ansible_toolset molecule $*
+}
+
+ansible-playbook() {
+  sudo docker run --rm -it -v $PWD:/$PWD -v $PWD/keys/id_rsa:/root/.ssh/id_rsa:ro -w $PWD/ansible -e ANSIBLE_HOST_KEY_CHECKING=false quay.io/ansible/toolset:main ansible-playbook $*
+}

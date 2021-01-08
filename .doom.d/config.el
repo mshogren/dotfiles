@@ -52,6 +52,8 @@
 ;; You can also try 'gd' (or 'C-c g d') to jump to their definition and see how
 ;; they are implemented.
 
+(add-load-path! "lisp")
+
 (setq browse-url-browser-function 'browse-url-generic
       browse-url-generic-program "www-browser")
 
@@ -76,25 +78,18 @@
           (lambda ()
               (add-hook 'after-save-hook 'update-org-agendas-and-appts)))
 
-(defun notify-popup (title msg)
-  "Show a popup if we're on X, or using PowerShell, or echo it otherwise;
-TITLE is the titleof the message, MSG is the context.
-Optionally, you can provide an ICON and a sound to be played"
-  (if (executable-find "notify-send")
-      (let ((default-directory temporary-file-directory))
-        (async-shell-command (concat "notify-send " " '" title "' '" msg "'")))
-    (if (executable-find "powershell.exe")
-        (let ((default-directory temporary-file-directory))
-          (async-shell-command (concat "powershell.exe -Command \"New-BurntToastNotification -Text '" title "', '" msg "'\"")))
-      (message (concat title ": " msg)))))
+(require 'dom)
+(require 'shr)
+(require 'alert-toast)
 
-(defun notify-appt (min-to-appt new-time msg)
-  "Show a notification based on an upcoming appointment"
-  (notify-popup msg new-time))
+(setq alert-fade-time 30)
+(setq alert-default-style 'toast)
 
 (setq appt-display-format 'window)
-(setq appt-disp-window-function 'notify-appt)
-(appt-activate 1)
+(setq appt-disp-window-function
+  (lambda (min-to-appt new-time msg)
+    (alert msg)))
+(appt-activate t)
 (display-time)
 
 (setq +org-capture-notes-file "refile.org")

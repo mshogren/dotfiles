@@ -4,6 +4,9 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 endif
 
 call plug#begin('~/.vim/plugged')
+Plug 'tpope/vim-dispatch'
+Plug 'tpope/vim-dadbod'
+Plug 'kristijanhusak/vim-dadbod-ui'
 Plug 'w0rp/ale'
 Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
@@ -18,9 +21,9 @@ Plug 'will133/vim-dirdiff'
 Plug 'OmniSharp/omnisharp-vim'
 Plug 'Shougo/deoplete.nvim'
 Plug 'roxma/nvim-yarp'
-Plug 'roxma/vim-hug-neovim-rpc', { 'do': 'pip3 install neovim' }
+Plug 'roxma/vim-hug-neovim-rpc'
 Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
-Plug 'zchee/deoplete-jedi', { 'do': 'pip3 install neovim jedi' }
+Plug 'zchee/deoplete-jedi'
 call plug#end()
 
 if !isdirectory($HOME . "/.vim/undo")
